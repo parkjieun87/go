@@ -48,3 +48,15 @@ func TestGetUserInfo(t *testing.T) {
 	data, _ := io.ReadAll(resp.Body)
 	assert.Contains(string(data), "User Id:89")
 }
+
+func TestCreateUser(t *testing.T) {
+	assert := assert.New(t)
+	ts := httptest.NewServer(NewHandler())
+
+	defer ts.Close()
+
+	resp, err := http.Post(us.URL+"/users", "application/json",
+		strings.NewReader(`{"first_name":"tucker", "last_name":"kim", "email":"tucker@naver.com"}`))
+	assert.NoError(err)
+	assert.Equal(http.StatusCreated, resp.StatusCode)
+}
